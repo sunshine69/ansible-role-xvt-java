@@ -1,13 +1,21 @@
-- name: Add apt repository
-  apt_repository: repo='ppa:webupd8team/java' state=present update_cache=yes
+- block:
+    - name: Add apt repository
+      apt_repository: repo='ppa:webupd8team/java' state=present update_cache=yes
 
-- name: Accept Oracle license
-  debconf:
-    name: 'oracle-java8-installer'
-    question: 'shared/accepted-oracle-license-v1-1'
-    unseen: no
-    value: 'true'
-    vtype: 'select'
+    - name: Accept Oracle license
+      debconf:
+        name: 'oracle-java8-installer'
+        question: 'shared/accepted-oracle-license-v1-1'
+        unseen: no
+        value: 'true'
+        vtype: 'select'
 
-- name: Install Oracle Java 8
-  apt: name='oracle-java8-installer' state=present
+    - name: Install Oracle Java 8
+      apt: name='oracle-java8-installer' state=present
+  when: java_lts_version == '8' and use_oracle_java|default(False)
+
+- block:
+  - name: Install openjdk java version {{ java_lts_version }}
+    apt:
+      name: "openjdk-{{ java_lts_version }}-jdk"
+  when: not use_oracle_java|default(True)

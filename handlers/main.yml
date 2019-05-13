@@ -1,2 +1,3 @@
----
 # handlers file for xvt-java
+# Only supported LTS -
+java_lts_version: "8"

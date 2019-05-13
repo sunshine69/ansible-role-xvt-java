@@ -1,2 +1,3 @@
 ---
 # defaults file for xvt-java
+java_lts_version: "11"
